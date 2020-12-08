@@ -1,0 +1,163 @@
+1.Predicate--> predicate is a function with a single argument and returns boolean value. It has test() method.
+Default methods: and ,or , negate.
+
+2.Function:--> Functions are exactly same as predicates except that functions can return any type of result but function should (can) return only one value and that value can be any type as per our requirement.
+Abstract method in this interface is apply().
+Default method in this interface is andThen(), compose().
+andThen()--> f1.andThen(f2).  Here first f1 will happen then f2 will take place.
+compose()--> f1.compose(f2). Here first f2 will take place then f1 will take place.
+
+
+3.Filter--> Predicate
+
+4.Mapping--> Function
+
+5.Consumer-->Sometimes our requirment is we have to provide some input value, perform certain operation, but not required to return anything,then we should go for Consumer. It has accept() method. Default method of this Functional Inerface is andThen().
+
+6.Supplier-->Supplier won't take any input and it will always supply objects. It has only one method get().
+
+7.forEach-->Cosumer interface.
+
+8.Stream has multiple methods.like 	filter,map,findfirst,forEach etc. There are 2 types of methods available in Stream.One is Lazy method and another one is termination method. Lazy methods dont start and complete their work untill any termination methods ask for it.
+e.g: filter,map etc is lazy methods and findfirst,forEach etc are termination methods. 
+
+code exmaple: list.stream().filter(i->{
+										sout("hi");
+										return true;});
+
+This piece of code will not print anything as it is a lazy method.
+
+list.stream().filter(i->{
+										sout("hi");
+										return true;}).findfirst();
+										
+This piece of code will print "hi" once. Difference b/w 2 types of code is.. in  first one there is not any termination operator whereas in the second code there is terminataion operator.
+Note: In stream we can not reuse the values.
+
+
+
+9.Java8 helps us to sort out diamomd problem.
+
+10.USe of default method in Interface: Whenever an interface is published, after that if any new method needs to be added in that interface, that time all the implemented classes of that perticular interface will face compilation error as the new method has not been implemented in those classes. So just to add any new requirement in that interface we have to make change all the implemented classes which is not supposed to be. 
+To overcome this problem concept of default method has come into the picture. With help of default method we can implement new requirement in the interface. And for this we dont need to change even the implemented classes.
+
+11.Difference between orElse and orElseGet
+orElse--> This method will always invoke the parameterized method even though it is not null optional.For non-empty optional it invokes the parameterized method, but not allow to display the the return from that parameterized method.
+orElseGet--> This method will only invoke the parameterized method when the optional is null, otherwise not. It is a function.
+So between orElse and orElseGet , orElseGet is always gives better performance.
+
+
+12.Optional--> It is a container of specfic types of objects. Better way to handle nullpointer exception.It is a final class of java util package.
+
+13.Optional.of and Optional.ofNullable--> If we use optional.of and the object for which it is getting used might be null. At that point it will throw nullpointer exception whereas optional.ofNullable will return empty for the same.
+So in a word optional.of is suggested to use when the object is not null and optional.ofNullable is suggested to use when we are not sure whether the object will be null or not.For null scenario optional.ofNullable will return empty. 
+
+
+14.mapToInt:Stream mapToInt(ToIntFunction mapper) returns an IntStream consisting of the results of applying the given function to the elements of this stream.
+Stream mapToInt(ToIntFunction mapper) is an intermediate operation. These operations are always lazy. Intermediate operations are invoked on a Stream instance and after they finish their processing, they give a Stream instance as output.
+
+15.reduce: Many times, we need to perform operations where a stream reduces to single resultant value, for example, maximum, minimum, sum, product, etc. Reducing is the repeated process of combining all elements.
+reduce operation applies a binary operator to each element in the stream where the first argument to the operator is the return value of the previous application and second argument is the current stream element.
+
+16.forEach
+17.Method Referrence: It is an alternative way of implementing functional Interface rather a substitution of lambda expression. Only criteria for this two methods(Functional interface method and the method which is going to be referrenced) is the parameter for these 2 methods must be same.
+
+18.Diamond Problem: Default method in Interface is going to resolve this problem. In the implemented class the method must be overrided and it will take the required implementaton whethter from interfaces or it will create its own impementation.
+
+19.Parallel Streram: Let’s take a scenario where you have a list of employee objects and you have to count the employees whose salary is above 15000. Generally, to solve this problem you will iterate over list going through each employee and checking if employee’s salary is above 15000. This takes O(N) time since you go sequentially.
+Streams give us the flexibility to iterate over the list in a parallel pattern and can give the total in quick fashion. Stream implementation in Java is by default sequential unless until it is explicitly mentioned in parallel. When a stream executes in parallel, the Java runtime partitions the stream into multiple sub-streams. Aggregate operations iterate over and process these sub-streams in parallel and then combine the results.
+The only thing to keep in mind to create parallel stream is to call the parallelStream() method on the collection else by default the sequential stream gets returned by stream() method.
+
+When to Use Parallel Stream?
+Parallel Streams quickly iterate over the large-sized collections
+Parallel Streams can be used if developers have performance implications with the Sequential Streams.
+
+Performance Analysis: If we are working with very large scale collection, that time parallel stream will gives us quick result.
+
+20.Function.compose(): If 2 functionns are there and we are using f1.compose f2() then it signifies first f2 function will be executed then f1 will be executd. It is a default method of Function functional Interface.
+
+21.All functional interfaces which are introduced in java8, are organised under java.util.function package.
+
+22.If an input or output is a primitive type then using these functional interfaces will enhance the performance of your code. For example, if input to a Predicate is primitive type int then using intPredicate instead of Predicate will remove unnecessary boxing of input. e.g: IntPredicate, DoublePredicate, LongConsumer etc.
+
+23. Methods of Stream API: filter,map,distintct,sorted,limit,skip,forEach,toArray,reduce,collect,min,max,count,anyMatch,allMatch,noneMatch,findFirst,findAny
+
+24.limit():->Return a stream containing first n elements.
+	distintct():->Returns a stream of unique elements.
+	skip():->Returns a stream after skipping first n elements.
+	count():->Returns the number of elements in a stream.
+	anyMatch():->Returns true if any one element of a stream matches with given predicate.
+	allMatch():-> Returns true if any all the elements of a stream matches with given predicate.
+	findFirst():->Returns first element of a stream wrapped in an Optional obj.
+	findAny():->Randomly returns any one element in a stream.
+	
+25. If we want to use sum() method then we have to first make the stream into intStream.
+26.If we want to use reduce() method then we have to use map() method also.	
+27. orElse or orElseGet will accept such a method which has return type which is same as the type of filter/ map used for the stream. If it is String type than the method must have String type return type.
+
+28.Collectors.groupingBy() method: In this query, we use Collectors.groupingBy() method which takes two arguments. We pass Employee::getGender as first argument which groups the input elements based on gender and Collectors.counting() as second argument which counts the number of entries in each group.
+
+29. Flatmap helps us to do One-To-Many mapping.
+
+
+
+
+
+
+
+Programme to be practiced
+-----------------------------
+1.Customized sorting of an ArrayList
+2.Functional Interface implementation using Lambda expression.
+3.TreeMap Sorting
+4.Enter a number and check whether it is greater than 10 or not using Predicate.
+5.Remove null and empty String from an String[] using Predicate.
+6.Create an arrayList of S/wEngineer Class (name,salary,isHavingTicket).Print those Employee details who is having salary>15000 and isHavingTicket=true. Use Predicate Concept.
+7.Exmaple of Predicate.isEqual().
+8.Exmaple of Predicate joining.
+
+9.Find number of spaces in a String using Function
+9.There is a String "AishariyaAbhi". Take first 8 letters and make it in uppercase using Function chaining.
+10.Calcualate totla salary from an EMployee ArrayList using Fuunctin.
+11. Create an Employee Class ArrayList and then increase salary by 1000 rs of those Employee who are having salary less than 1500. Print this new ArrayList.
+
+12. Print any String using Consumer
+13.Create a Movie ArrayList(name, Businees Amount and movie Result(Hit/Flop). Print this details of every movie using Consumer chaining.
+
+14.Print current Date using Supplier.
+15.Otp generation using Supplier.
+
+16.Product of 2 elements using biFunction.
+17.Sum of 2 Integer is even or not Using BiPredicate.
+
+18.Method referrence using Static and NonStatic mehhods.(Implement both the scenario: Same return type and different return type).
+19.Implement Constructor referrence.
+20.Sort Employee Class on the basis of Employee Salary.
+
+21.Resolve Diamond Problem using Default method.
+22.Run interface using Static class.
+
+23.Print all the element of an arrayList using forEach.
+24.Customized sorting of an ArrayList and print the max number using Stream API and max()method.
+25.Sort an arrayList using customized sorting and collect those elements in a new ArrayList and print.
+26.Filter all the elements of an ArrayList and pick only even elements and add them in a new ArrayList and print that.
+27.Double all the elements of an ArrayList and collect those new elements in an arrayList and print the new ArrayList.
+28.Filter only odd elements and print those odd elements using Stream, filter and forEach.
+
+29.Suppose there is an ArrayList of Employee(name and age=30). Print the sum of age of all the all the Employee's age using stream,filter,Method Referrence, sum/reduce method.
+30.Sum of all the element using reduce method.
+31.Sum of all the element using mapToInt and sum method.
+
+32.Example of FlatMap
+
+33.Create an Optional of String type(Book name). Print the book name if the name is "JAVA" else print "not found".
+For this problem statement use orElse/orElseGet and understand the difference b/w these 2 types of methods.
+
+34.Use example of toArray and Stream.of().
+
+
+
+
+
+
+

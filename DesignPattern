@@ -1,0 +1,95 @@
+Design Pattern
+SOLID Principle
+S-->Single Responsibility Principle
+O-->Open Closed Principle
+L-->Liskov substitution principle
+I-->Interface Segregation Principle
+D-->Dependency Inversion Principle
+
+MAINLY IT TELLS ABOUT PROGRAMMING TO AN INTERFACE. RESUING THE CODE THROUGH INTERFACE PROGRAMMING.
+-------------------------------------------
+
+S-->Single Responsibility Principle
+-----------------------------------------------------
+This concept talks about that: A single method can have a single responsibility to handle. 
+e.g: Inside Book class there are 2 functionlaties print and save. We can establish these 2 functionlaties inside a single method but this is not a good practice. As per Single Responsibility Principle concept we have to keep implement these two differecnt functionlaties inside two differecnt methods like print() and save().
+---------------------------------------------------------
+O--> Open Closed Principle
+-----------------------------------------------------
+This concept talks about: the design and the writing of the code should be done in a way that new functionlaties should be deal with minimum changes in the existing code. That means new functionlaties should impact the existing functionlaties as less as possible.
+Software entities should be opened for extension but close for modification.
+Through Strategy pattern and Template Pattern we can achive this.
+OPEN for extension but CLOSE for modification.
+
+Scenario: Suppose we have an interface and it is having a sort method. Now there are multiple way to implement that sort method. Best way to do this one is create multiple classes and implements that interface individually according to requirment. So in future whenever new requirment of implementation come it woudn't impact the existing implementation.
+-------------------------------------------------------------------------
+L-->Liskov substitution principle
+
+We create parent class and then extend it to child class. It should be such that the child should not break the parent functionality
+If we replace parent with child then there should not be any error as such
+Interface with lots of method, create a new suitable one with lesser methods
+
+-------------------------------------------------------------
+I--> Interface Segregation Principle
+Create as many distinct interfaces as possible. Suppose an interface contains 6 methods and the class which is going to implement that needs only 2 of them. But for that class, it has to implemet all the 6 methods event though few of them are not needful for that class.
+This is not a good programming practice. To overcome this one we have to create most possible distinct interfaces.
+--------------------------------------------------------------------
+D--> Dependency Inversion Principle
+B/w High and Low level modules(components) there must be a bridge of abstraction layer(Abstract Class/ Interface)
+Design Pattern: Factory, Tempalte, Service Locator Pattern, Dependency Injection
+
+
+
+----------------------------
+Behavioral Design Pattern
+----------------------------
+Strategy Pattern:
+----------------------------
+This design pattern tells about coding using Inheritance(Is a) and Composition(has a) relationship.
+
+Command Pattern
+----------------------------
+This design pattern is established on Open Close Principle.
+It tells about 4 components.
+Command
+Receiver
+Invoker
+Client
+
+Template Pattern
+----------------------------
+In this design pattern an abstract class exposes defined way/TEMPLATE  to execute its methods.
+Its subclasses can override the method implementation as per need bt the invvation(reference) must be of the abstract class only. SO that easily we can change the implementation class w/o changing much into the code.
+
+Null Object Pattern
+-----------------------------
+This design pattern helps us to avoid Nullpointer Exception.
+
+
+Visitor Pattern
+-----------------------------
+It implements OPen-Close principle.
+
+
+
+
+-----------------------------
+CREATIONAL DESIGN PATTERN
+-------------------------------
+Singleton Pattern
+
+
+Factory Pattern 
+-------------------
+Factory pattern helps us to create loosely coupled object oriented programme. In this pattern we encapsulate the obejct creation.
+
+Builder Pattern
+-------------------
+Suppose There are lots of paramater in the constructor. IF any new parameter is added then we need to create a new constructor. But with the help of Builder pattern, using inner static class and telescopic constructor we can create an inner class and and just need to add one setter method to handle this kind of situation. This approach provides an immutable object.
+
+
+
+
+
+
+

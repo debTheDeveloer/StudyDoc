@@ -1,0 +1,26 @@
+Java8 doubt
+1.What is the rule for Method referrence? Is it mandatory to maintain the same return tyoe of both the method?
+
+Collections: In memory Data structure
+Stream: Fixed Data Strucure
+
+What is lazy function?
+
+Stream debugger plugins is used to debug stream API.
+How to use?
+
+
+return new Offers()
+        .offers(
+                offers.getOffers().stream()
+                .filter(offer -> filterByIsGMEmployee(offer.getId(), isGMEmployee))
+                .collect(toList()));
+				
+				
+  @Bean(EVENT_HANDLER)
+  public EventHandler receiveEvent(EventProcessor eventProcessor) {
+    return  (Event event) -> {
+      logInfoEventMessage("Received Event " + event.toString());
+      eventProcessor.processEvent(event);   ----> This is a void method, how it can have return typee?
+    };
+  }

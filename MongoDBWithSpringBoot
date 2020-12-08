@@ -1,0 +1,159 @@
+Spring Boot MongoDB
+1.Why MongoDB?
+ Enterprise Support
+ Acid Transaction
+ It can deals with massive amount of data
+ 
+2.When to use Mongo over a SQL DB? Mongo vs SQL
+ Relational database has Schemas. It will be a quite headache to dramatically modify the data model once it reaches a certain maturity.
+ 
+Suitable conditions for MongoDB
+ 1.Easier to evolve data model, which makes maintaining and evolving application easier.
+ 2.We can scale mongoDb rapidly.
+ 3.Can handle huge amount of data with lower costs.
+ 4.Multi documents transactions are limited.
+ 5.Not ideal for advance searching, reporting, Business Intelligence, i,e in a short where lots of queries are used in that scenario mongo DB is not suitable to use.
+ 
+Suitable conditions for Relational DB
+ 1.Works very well when data model is stable. Data model has almost no chance or very low chance to getting changed over the life cycle of the application.
+ 2.Full transaction support.
+ 3.Extremely good for the scenarioes where data mining and BI is used extensively.
+ 4.Difficult to evlolve when model gets complicated.
+ 5.More difficult to scale.
+
+Mongo Terminology
+----------------------
+In SQL DB there is concept of  Table, Row(Entity) and column.
+In Mongo we have Documents. A document can contain fields, Sub-documnents, Arrays of sub documnents.
+Document: Document is the Entity class of Relational DB.
+
+Terminology comparision in Mongo and SQL DB
+SQl              Mongo
+-----------------------------
+Table 			Collection
+Rows 			Document
+Column		    Fields
+Indexes			Indexes
+Relationship 	Sub-documnent
+
+Annotation
+------------------------------
+@Document
+@Field
+@Indexed
+
+
+
+
+Dependency Required: spring-boot-starter-data-mongodb
+
+** In MongoDb data are beig represensted in a json format. But in our code it is in object format. Just to convert this data from object format to json format and viceversa we have to use Data Annotations.
+Common annotaions: @Document, @Field, @Id,@Indexed, @TextIndexed, @Transient, @PersistanceConstructor.
+
+@Field: If we want to store a field under a different name in mongoDB then we have to use @Filed("NewName").
+
+@Transient: If we dont want to persist any field in mongoDB then we have to use @Transient annotaion.
+
+@Indexed: If we are going to filter thrugh any perticular field then we have to use @Indexed(IndexDirection.Ascending).	If we are going to use this annotaton for each filed then we may face performance degradation.
+
+@PersistanceConstructor:In our Documnent class if there are multiple constructors then this annotation will help mongoDB to use which constructor to use during seralizing and desrializing. For single construtor presence this annotaion is not so much meaningful.
+
+
+Connection of Application and MongoDB
+spring.data.mongodb.host=localhost
+spring.data.mongodb.port=27017
+spring.data.mongodb.database=legostore
+
+
+Creating DB
+Database name--> Same as mentioned in the property file.
+Collection name--> Same as mentioned in the Model class.
+
+Normally Spring automatically creates using the annotation(@Document) mentioed in the code.
+
+----------------
+MONGOTEMPLATE (It belongs from springframework.data.mongodb.core)
+----------------
+
+MongoTemplate: MongoTemplate is a class from Spring Data mongoDB framework that allows us to perform various DB operations on mongoDB.
+
+**FOR EVERY MODEL CLASS DEFAULT CONSTRUCTOR IS MANDATORY TO HAVE IF THERE PRESENTS ANY PERAMETERIZED CONSTRUCTOR.
+
+CRUD OPERATION METHODS
+--------------------
+Post Method--->MongoTemplate.insert
+Get Method--->MongoTemplate.findAll
+Put Method--->MongoTemplate.save
+Delete Method--->MongoTemplate.remove(new Query(Criteria.where("id).is(id),EntityClassName.class);
+
+During Crud Operation of Update and Put method it is mandatory to mention the id in put method. Otherwise two different entries will be established.But for post operation it is not mandatory to mention the id. MongoDB will generate the unique id on its own during each entry.
+
+----------------
+MONGOREPOSITORY (It belongs from springframework.data.mongodb.repository)
+----------------
+MongoRepository helps us to handle the crud operations in an easier way compared to MongoTemplate.
+MongoRepository extends CrudRepository, PagingAndSortingRepository, QueryByExampleExecutor interfaces.
+
+Comparision b/w MongoTemplate and MongoRepository
+----------------------------------------------------
+MongoTemplate is suiable for those scenarioes where lots of very complex queires are associated. If we are using MongoTemplate we need to know how the queries really works. MongoRepository extends QueryByExampleExecutor interface. This interface makes the search operation much easier compared to MongoTemplate.
+
+For MongoRepository it is very much easy to use in terms of using syntex for filtering data.
+1.It is having higher abstraction compared to MongoTemplate.
+2.It is built on over JPA concept. That is why it is having as repositories over SQL.
+3.It is not useful for those scenarioes where lots of very complex queries are associated.
+4.MongoTemplate provides a lot more control when it comes to querying data and what data to pull from database.
+5.Spring Data repositories provide us a convenient outlook on how to fetch data.
+6.MongoTemplate is database dependent. What this means is, with Spring Data repositories, you can easily switch to a different database altogether by simply using a different Spring Data repositories for MySQL or Neo4J or anything else. This is not possible with MongoTemplate.
+
+Note: In this lesson, we looked at how MongoTemplate can provide us more control over Spring Data repositories but can also be a little complicated when deeper queries are involved. So, this is completely your call what to choose when you develop your idea. Feel free to leave comments below.
+
+Methods of MongoRepository
+Post Method--->insert
+Get Method--->findAll
+Put Method--->save
+Delete Method--->deleteById(id)
+
+
+Difference between insert and save
+----------------------------------------
+Both can insert new documents, but if the documents already exists(based on id), then insert will throw an error where save will update it.
+
+
+If we want to search any document throgh our customized queries we can execute that in mongo UI also.
+E.g:Suppose we want to find document which has having Delivery.DeliveryFee lessthan 50.
+Query: db.getCollection('legosets').find({"delivery.deliverFee": {$lt : 50}})
+E.g:Suppose we want to find document which has having Delivery.DeliveryFee greaterThan 10.
+db.getCollection('legosets').find({"delivery.deliverFee": {$gt : 10}})
+
+
+$gt--> Greater than
+$lt-->Less than
+$eq-->Equal
+
+
+Sorting we can use only for MongoDB provided queries. We cant use this for our customized queires method because these methods are itself is a query.
+
+Method Name Composition
+-----------------------------------------
+Spring data can provide proxy implementation of queries based on method names.
+e.g:
+findByLastName
+findByAgeLessThan
+findByActiveTrue
+
+Note: This fields must be annotated with @Indexed in the POJO class. Otherwise we will not enjoy this benifit.
+
+QueryDSL:
+------------
+When are using our customized query using @Query annotation, it has certain limitation. In future if we are going to change the data model. Then we have to change tge query as well. AS a result we have to change our code. This is not a good practice.
+That is why QueryDSL comes into picture.
+
+Process of QueryDSL: It scans all the classes which are having @Document annotation and all its child classes.
+In code we have to add 2 dependencies for the same and queryDsl plugin.
+1.querydsl-mongodb
+2.querydsl-apt
+
+MongoBee helps us to handle Data Migration.
+
+

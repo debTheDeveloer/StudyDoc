@@ -1,0 +1,26 @@
+JWT
+1. Dependency: 
+	a.> Spring Boot Starter Security
+	b.> jjwt
+
+2. Classes Interaction: 
+	Client --> JWTReQuestFilter Extends OncePerRequestFilter --> JWTAuthenticationController --> AuthenticationManager --> JWTUserDetailsService --> JWTTokenUtill
+
+Responsibility of Each Classes:
+a.> JWTRequestFilter Extends OncePerRequestFilter--> Check if req has token . If not then call generateAuthenticationToken() with /authentiction mapping
+b.> JWTAuthenticationController -->Validates userName and Password using spring authenticate().
+c.> AuthenticationManager --> It matches the userName and password receieved from DB and received from /authenticate req. If matches then return true to controller  else return InvalidUserException. It is a Spring Security class.
+d.> JWTUserDetailsService --> It fetches UsreName and password from the DB and provide it to AuthenticationManager.
+e.> JWTTokenUtill --> Returns a valid token.
+
+-------------------------------------------------------------------------OAUTH 2.0------------------------------------------------------------------------------
+
+Oauth2 works on Vallet key concept mechanishm.
+Oauth is an authorization mechanism not an authenticate mechanism.
+
+There are 2 ways to authorize a user by generating a token. First is session token and second is JWT token.
+
+JWT is a part of an authentiction mechanism of creating a token. Basically JWT is a protocol to create a token.
+
+JWT is a Value token. 
+Session is a Referrence token. It refers the state of the server.Session 

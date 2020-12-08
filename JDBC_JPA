@@ -1,0 +1,184 @@
+JDBC and JPA
+------------------
+Creating table using data.sql: Whenever we will be using data.sql for creating db, populating data.. SpringBoot automatically uses this file by its auto configuration feature. There is no any hard and fast rule for this sql file. We can rename it to any name but the extension of the file must be "sql".
+
+Steps for JDBC(not spring JDBC)--> First we create connection. then we prepare statement(basically the querry) , then we will execute the querry as a result we will get the resultset. Now we will close the statement and connection.
+Spring JDBC has reduces the number of lines of codes. Spring JDBCTemplate close the connection automatically. As a result chances of making mistakes in Spring JDBC is less.
+
+DIfference b/w jdbcTemplate.Query and JDBCTemplate.queryForObject: Query method is for general purpose whenever we are trying to fetch all the objects (like findAll) but queryForObject is for searching a specific object based on specific attribute like (findById).
+
+1.Applications which are built with JDBC and Spring JDBC is very difficult to maintain. At the same time whoever is writing the code he/she needs to know SQL as inside code they have to write SQL queries in JDBC. That is why JPA comes into the picture. 
+JPA stands for Java Persistance API.
+
+2.DAO layer: DAO stands for Data Access Object. It is a design pattern which is used to interact with any data source to retrieve data from that source. In DAO classes JDBC logic is used to retrieve the data. With the help of this design pattern we can separate the business layer and the data layer.
+
+3.@Repository: It includes @Component annotation also. Main function of this annotation is to accesst the DB.One advantage of using this annotation is that it has automatic persistence exception translation enabled. When using a persistence framework such as Hibernate, native exceptions thrown within classes annotated with @Repository will be automatically translated into subclasses of Spring's DataAccessExeption.
+
+4.JdbcTemplate: Spring JdbcTemplate is a powerful mechanism to connect to the database and execute SQL queries. It internally uses JDBC api, but eliminates a lot of problems of JDBC API.It is the central class in the Spring JDBC support classes. It takes care of creation and release of resources such as creating and closing of connection object etc. So it will not lead to any problem if you forget to close the connection.
+It handles the exception and provides the informative exception messages by the help of excepion classes defined in the org.springframework.dao package.We can perform all the database operations by the help of JdbcTemplate class such as insertion, updation, deletion and retrieval of the data from the database.
+
+Problem of JDBC API: <a> We need to write a lot of code before and after executing the query, such as creating connection, statement, resultset,  closing resultset, connection etc.
+<b> We need to perform exception handling code on the database logic.
+<c>We need to handle transaction.
+<d>Repetition of all these codes from one to another database logic is a time consuming task.
+
+Advantages of Spring JdbcTemplate:Spring JdbcTemplate eliminates all the above mentioned problems of JDBC API. It provides you methods(jdbcTemplate.query,jdbcTemplate.queryForObject,jdbcTemplate.update) to write the queries directly, so it saves a lot of work and time.
+Basically it reduces the headache of creating conection, resultset etc like we have to do in normal JDBC.
+
+5.ResutSet: A ResultSet is a Java object that contains the results of executing an SQL query. In other words, it contains the rows that satisfy the conditions of the query. 
+
+6.RowMapper: The org.springframework.jdbc.core.RowMapper<T> interface is used by JdbcTemplate for mapping rows of a ResultSet on a per-row basis. Implementations of this interface perform the actual work of mapping each row to a result object. 
+
+7.In Spring JDBC we use JDBCTemplate and we use JdbcTemplate.queryForObject. Inside which we write the corresponding querry.
+
+
+****************************************************************JPA with Hibernate***********************************************************
+Dependency:Spring-boot-starter-data-jpa
+
+8.Why JPA needs no-arg constructor: Because it often happens that the JPA provider has to instantiate your domain object dynamically. It cannot do so, unless there is a no-arg constructor - it can't guess what the arguments should be.
+	
+9.EntityManager:JPA EntityManager is used to access a database in a particular application. It is used to manage persistent entity instances, to find entities by their primary key identity, and to query over all entities. EntityManager writes the query for us on its own. Developer doesn't need to take care that like he/she needs to take care that in JDBC/Spring-JDBC.
+Hibernate is an ORM framework where programmer describes the way objects are represented in database. Hibernate handles the conversion automatically.
+Hibernate provides implementation of JPA interfaces EntityManagerFactory and EntityManager.
+EntityManagerFactory provides instances of EntityManager for connecting to same database. All the instances are configured to use the same setting as defined by the default implementation. Several entity manager factories can be prepared for connecting to different data stores.
+EntityManager tracks all the steps of transaction activities. If first persist one row and then we update the same row. If we even dont mention em.merge after doing that update, EntityManager will consider this update and it will reflect in DB also. This is how it works.
+
+
+10.During crud operation we will use the entityManager methods inside the class which contains @Repository annotation.
+
+11.CRUD operation methods of EntityManager: 
+find
+persist(insert)
+merge(update)
+remove
+flush():With the help of this method we can control upto which step changes we will send the changes to database.
+detach(): This method will help us to decide upto which we will save the changes to the DB.
+clear(): This method helps us to detach the entimanagers in another way. It clears everything thst is present inside. Basically clear() method can be used in place of repeatating use of detach() method.
+refresh():  it refreshes the state of the instance from the database also it will overwrite the changes to the entity. Suppose a row has been updated and beforer making it flush if we call refresh() then corresponding row from db will be fetched and it will be refreshed with that db data as a result the lastest changes will be lost and recent changes will not be reflected in the db.
+
+12.JPQL: This query is written using Entity and JPA converts it into SQL query. e.g: select p from p where id=? [ P is the entity class name]
+
+13.NativeQuery: In this cocnept we write queries using SQL parameter not using entity class. like: select * from Student where id=?
+During mass update we have to use nativeQuery bcz if we want to perform this operation using JPA then we have to forst retrive every single row then we have to update it.
+
+************************************************************One To One relationship**********************************************************
+Many to many: Course-Student
+One to One: Student-Passport
+Many to One: Course-Student
+One to Many: Course-Review
+
+Let's focus on One to One relationshp of Student-Passport.
+We can establish this relationship two ways. One is we can add one column in Student class named passport_id or we can add one column in Passport class named student_id.
+Let's take the scenario where we will create passport_id in the Student table. For this we have to create Passport class instance inside Student class and we will use an annotation on the top of this annotation @oneToOne which is a JPA annotation.
+
+Eager Fetching: Eager fetching is the ability to efficiently load subclass data and related objects along with the base instances being queried. In eager fetching querry is being triggered only once by which we retrieve the parent class and corresponding child class also.
+e.g: As we know Student and passport both are in one to one relationshp and Student owns Passport. So if we want to retrieve any Student row using em.find() method then automatically corresponding Passport details will also be fetched. This mechanism is called eagerly fetching.
+Any OneToOne mappping is a Eagerly fetching mechanism.
+Any oneToMany relationship is a Lazy fetching.
+Any manyToOne is always lazy fetching.
+
+Foreign Key: It is the primary key of another table and it is required to join two table. 
+
+Lazy Fetching: In lazy fetching we will get the details of subclass when we need it. During fetching the parent class it doesnt load child class. In lazy fetching querry is being triggered multiple time. First time query will only fetch the parent class. Now whenever child class of the corresponding parent class will be required query for child class will be triggered to DB.
+
+Persistance Context: Whenever we are using @Transactional, the entity classes fetched from DB are stored in Persistance Context. And Persistance Context lives starts at the start of Transaction and ends in the end of Transaction. The way we interact with Persistance Context is by using EntityManager. Persistance Context takes care of all the transactional changes we make. EntityManager is the intrface of the Persistance Context.
+
+OneToMany Relationshp: In one to many relationship(e.g: Course-Review) we have to make the many class as owning side. e.g: Here Review is the owning side. So we have to put mapped by in the Course class. We are making Review class as owning side because inside Course class creating Review_id is not possible as this column has to contain multiple Review_ids for a single Course.
+
+ManyToMany Realtionship: e.g: Student-Course.
+In manyToMany relationship there is a concept of Join table which consist of both the table's primary keys.
+
+
+******************************************************Spring Data JPA********************************************************************************************
+Spring Data: Spring Data aims to provide simple abstraction to be able to access in any kind of data and Spring Data JPA is JPA specific implementation of Spring Data. 
+Basically Spring Data is a parent set and Spring Data JPA, Spring Data MongoDB all these are sub set of this set.
+Spring Data JPA works on Hibernate.
+
+Crud Operation methods inside JPA repository are:
+get:--> findByID
+Post/Put:--> save
+Delete:--> deleteById
+
+Pagination: When we have a set of results and we want to divided into multiple groups/pages. This approach is called Pagination.
+e.g: Suppose we have 100 results and we want to disolay it in 10 pages like google search.
+
+**********************************************************Transaction Management*********************************************************************************
+ACID Properties
+------------------
+A transaction is a very small unit of a program and it may contain several lowlevel tasks. A transaction in a database system must maintain Atomicity, Consistency, Isolation, and Durability − commonly known as ACID properties − in order to ensure accuracy, completeness, and data integrity.
+
+Atomicity − This property states that a transaction must be treated as an atomic unit, that is, either all of its operations are executed or none. There must be no state in a database where a transaction is left partially completed. States should be defined either before the execution of the transaction or after the execution/abortion/failure of the transaction.
+
+Consistency − The database must remain in a consistent state after any transaction. No transaction should have any adverse effect on the data residing in the database. If the database was in a consistent state before the execution of a transaction, it must remain consistent after the execution of the transaction as well.
+
+Durability − The database should be durable enough to hold all its latest updates even if the system fails or restarts. If a transaction updates a chunk of data in a database and commits, then the database will hold the modified data. If a transaction commits but the system fails before the data could be written on to the disk, then that data will be updated once the system springs back into action.
+
+Isolation − In a database system where more than one transaction are being executed simultaneously and in parallel, the property of isolation states that all the transactions will be carried out and executed as if it is the only transaction in the system. No transaction will affect the existence of any other transaction.
+
+
+ISOLATION in details
+--------------------------------
+Isolation levels define the degree to which a transaction must be isolated from the data modifications made by any other transaction in the database system. A transaction isolation level is defined by the following phenomena –
+
+Dirty Read – A Dirty read is the situation when a transaction reads a data that has not yet been committed. For example, Let’s say transaction 1 updates a row and leaves it uncommitted, meanwhile, Transaction 2 reads the updated row. If transaction 1 rolls back the change, transaction 2 will have read data that is considered never to have existed.
+
+Non Repeatable read – Non Repeatable read occurs when a transaction reads same row twice, and get a different value each time. For example, suppose transaction T1 reads data. Due to concurrency, another transaction T2 updates the same data and commit, Now if transaction T1 rereads the same data, it will retrieve a different value.
+Transaction 1 - step 1:--> select * from Person where id=10;
+Transaction 2 - step1:--> Update Person set age=30 where id=10
+Transaction 1 - step 2:--> select * from Person where id=10;
+
+Phantom Read – Phantom Read occurs when two same queries are executed, but the rows retrieved by the two, are different. For example, suppose transaction T1 retrieves a set of rows that satisfy some search criteria. Now, Transaction T2 generates some new rows that match the search criteria for transaction T1. If transaction T1 re-executes the statement that reads the rows, it gets a different set of rows this time.
+Transaction 1 -step 1:--> select * from Person where age between 5 and 55;
+Transaction 2 - step 1:--> Insert into Person values(13,'Ravi',25); //New row has been added.
+Transaction 1 - step 2:--> select * from Person where age between 5 and 55;
+
+
+ISOLATION levels
+----------------------------------
+Read Uncommitted – Read Uncommitted is the lowest isolation level. In this level, one transaction may read not yet committed changes made by other transaction, thereby allowing dirty reads. In this level, transactions are not isolated from each other.It does not sort out any kind of isolation problems.
+
+Read Committed – This isolation level guarantees that any data read is committed at the moment it is read. Thus it does not allows dirty read. The transaction holds a read or write lock on the current row, and thus prevent other transactions from reading, updating or deleting it. It gives solution for Dirty Read.
+
+Repeatable Read:- select query data of table that is used under transaction of isolation level "Repeatable Read" can not be modified from any other sessions till transcation is completed. It gives solution for Dirty Read and Non repeatable read.
+
+Serializable:- Serializable Isolation is similar to Repeatable Read Isolation but the difference is it prevents Phantom Read. This works based on range lock. If table has index then it locks records based on index range used in WHERE clause(like where ID between 1 and 3). If table doesn't have index then it locks complete table. It gives solution for all three problems(Dirty Read,Non repeatable read,Phantom Read) of isolation.
+Serializable makes the application performance very poor.
+
+If we have deal with only one DB then Javax Transactional annotation is fine. But if we have to deal with multiple DBs and Queues then we should use Spring Transactional annotation. 
+ 
+In code how to use ISolation level
+@Transactional(isolation=SERIALIZABLE)
+
+
+*****************************************************************Caching****************************************************************************************
+First Level Caching:-> It reduces again and again interaction between the application and DB. It fetches all the specific persistence context related information from the DB and stores it in cache and use it when it requires. @Transactional gives us by default a first level cache.
+
+Second Level Caching:-> It stores all the common information irrespective of all the users or persistence context. 
+hibernate-ehcache is the dependency we have to add in Pom.xml for generating second level caching.
+@Cachable is the annotation through which we can decide which field is eligible for second level of caching. IF we want an entire Entity class to be cached then we will use this annotation at the class level.
+
+
+
+
+*************************************************************************OBSERVATION*****************************************************************************
+IN data.sql if we want to insert any String value then we have to use '' instead of "". Otherwise we will face Exception.
+If we want to establish bi-directional mapping then we have to use @JsonIgnore annotation otherwise we will face infinite loop problem.
+
+
+
+
+
+***********************************************************************MY SQL Connections************************************************************************
+Dependency required: mysql-connector-java and JPA
+Connection Establishment in Application.properties:
+spring.datasource.url=jdbc:mysql://localhost:3306/restapi
+spring.datasource.username=root
+spring.datasource.password=
+
+
+
+********************************************************************H2 Database Connection details**************************************************************
+Dependency: H2, JPA
+Conection for application.properties: 
+spring.h2.console.enabled=true
+Url for H2 database console: http://localhost:8080/h2-console

@@ -1,0 +1,16 @@
+@Component: It signifies that something is a bean and that needs to be managed by Spring.
+@Autowired: Spring should find the matching bean and wire the dependency in Spring Container.
+
+NoSuchBeanDefinationException: If a dependency class doesn't have @Component on its class level then we face this exception. Another scenario is.. if the bean is not in the scope of @ComponentScan package. Even if the dependency class has @Component annotation but it is not in the package which is applicable for @ComponentScan.
+
+NoUniqueBeanDefinationException: If the dependency has two implementation, in that scenario spring gets confuse which one to use and throws this exception.
+Now we have to approach to solve this problem. One is to use @Primary annotation and other one is to use @Qualifier.
+@Primary: We have to use this annotation in any one of the dependency among the multiple dependencies.
+@Qualifier: We have to use this during autowiring dependencies and we have to use this annotation to declare which dependency to use. 
+
+Spring uses multiple design pattern. These are: 
+Singleton Design pattern : For managing scope of beans
+Factory Design Pattern: For Bean factory and applciation context
+Template method: For AbstractController, JDBC template etc.
+
+

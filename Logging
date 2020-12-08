@@ -1,0 +1,14 @@
+Logging 
+LoggerFactory
+Logger logger  = LoggerFactory.getLogger(<Class name inside which we are writing this code>);
+It comes from SLF4J framework.
+
+Spring Boot Starter web contains Spring-boot-starter-Logging and this starter-logging contains Spring-JCL dependency(Spring common logging bridge).
+This SLF4J is an kind of interface. So default implementation of this SLF4J has been given in LogBack classes. This Logback is upgraded version of Log4J.
+If we check the jars of Spring boot project built by starter - web, then we will be able to see the jars of LogBack.
+
+There are multiple logging level. e.g: Info, Trace etc.
+By default logging level is Info. 
+To set the logging level into a different level we have to set the application level logging level.
+e.g: logging.level.root = TRACE.
+
